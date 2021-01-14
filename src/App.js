@@ -1,24 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
+import { Provider } from "react-redux";
+import InputForm from "./components/enterForm";
+import TaskList from "./components/taskList";
+import store from "./redux/store";
+import {Container, Jumbotron} from "reactstrap"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store = { store }>
+      <Jumbotron style={{textAlign: "center"}}><h1 className="display-3" style={{textAlign: "center", display: "inline-block"}}>Task Manager</h1>
+      <p 
+      style = {{ display: "inline-block" }}
+      >(React/Redux)</p></Jumbotron>
+      <Container>
+      <InputForm/>
+      <TaskList/>
+      </Container>
+    </Provider>
   );
 }
 
