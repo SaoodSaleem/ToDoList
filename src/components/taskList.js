@@ -1,39 +1,41 @@
-import React, {Component} from "react";
-import { ListGroup, ListGroupItem, Label, Button } from 'reactstrap';
-import { completeTask, deleteTask } from "../redux/actions/formAction";
-import { connect } from "react-redux";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import {List, ListItem, ListItemText, Button, Container} from "@material-ui/core"
+import {changeStatus, deleteTask} from "../redux/actions"
 
 class TaskList extends Component{
-    constructor(props){
-        super(props);
-        console.log(this.props.form)
+
+    state = {
+        value: null
     }
 
     render(){
         return(
-            <div>
-            <ListGroup>
-                <Label style={{textAlign: "center", fontSize: "30px"}}>TASK LIST</Label>
-                {this.props.form.tasks? this.props.form.tasks.map(task => (
-                    <ListGroupItem><p style ={ { 
-                        textDecoration: task.status == "complete" ? 'line-through' : 'none'
-                     } }>{ task.name }</p>
-                    <Button
-                    onClick = {() => deleteTask(task.id)}
-                    color = "danger">DELETE</Button>
-                    <Button
-                    onClick = {() => completeTask(task.id)}
-                    color = "success">COMPLETE</Button>
-                    </ListGroupItem>
-                )) : null}
-            </ListGroup>
-            </div>
+            <Container>
+            <List>
+                  {
+                      !!this.props.form ? this.props.form.form.map( item => (
+                        <ListItem style = {{border: 'solid', borderWidth: '1px', borderColor: 'grey', borderRadius: '5px', marginBottom: '0.5rem'}}>
+                        <ListItemText style={{ textDecoration: !! item.status == false ? 'line-through' : 'none'}}
+                        >{item.name}</ListItemText>
+                        <Button disabled = {!!item.status == false ? true: false} variant="contained" color="primary" style={{marginRight: '1rem'}} onClick = {() => this.props.dispatch(changeStatus(item.id,this.props.form))}>
+                        {!!item.status == false ? 'Completed': 'Mark as Complete'}
+                        </Button>
+                        <Button variant="contained" color="secondary" onClick = {() => this.props.dispatch(deleteTask(item.id,this.props.form))}>
+                        Delete
+                        </Button>
+                      </ListItem>
+                      )
+                      ) : null
+                  }
+
+            </List>
+            </Container>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-    form: state.form,
+const mapStateToProps = state => ({
+    form: state.formReducer
 })
-
-export default connect(mapStateToProps,{completeTask, deleteTask})(TaskList)
+export default connect(mapStateToProps)(TaskList)
